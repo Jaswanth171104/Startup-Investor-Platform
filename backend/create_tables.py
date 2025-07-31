@@ -16,15 +16,15 @@ from Database.db import engine
 def create_tables():
     """Create all database tables"""
     try:
-        print("🧪 Creating database tables...")
+        print("Creating database tables...")
         
         # Import all models to ensure they're registered
         print("Importing models...")
-        print(f"✅ User model: {User}")
-        print(f"✅ OTP model: {OTP}")
-        print(f"✅ StartupProfile model: {StartupProfile}")
-        print(f"✅ InvestorProfile model: {InvestorProfile}")
-        print(f"✅ Application model: {Application}")
+        print(f"User model: {User}")
+        print(f"OTP model: {OTP}")
+        print(f"StartupProfile model: {StartupProfile}")
+        print(f"InvestorProfile model: {InvestorProfile}")
+        print(f"Application model: {Application}")
         
         # Drop all tables first
         print("Dropping existing tables...")
@@ -34,24 +34,25 @@ def create_tables():
         print("Creating new tables...")
         Base.metadata.create_all(bind=engine)
         
-        print("✅ Database tables created successfully!")
+        print("Database tables created successfully!")
         
         # Verify tables were created
         from sqlalchemy import text
         with engine.connect() as conn:
-            result = conn.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name"))
+            # For SQLite, use sqlite_master instead of information_schema
+            result = conn.execute(text("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"))
             tables = [row[0] for row in result]
-            print(f"✅ Created tables: {tables}")
+            print(f"Created tables: {tables}")
             
             if not tables:
-                print("❌ No tables were created!")
+                print("No tables were created!")
                 # Let's check what's in the metadata
                 print(f"Tables in metadata: {list(Base.metadata.tables.keys())}")
             else:
-                print(f"✅ Successfully created {len(tables)} tables")
+                print(f"Successfully created {len(tables)} tables")
                 
     except Exception as e:
-        print(f"❌ Error creating tables: {e}")
+        print(f"Error creating tables: {e}")
         import traceback
         traceback.print_exc()
 

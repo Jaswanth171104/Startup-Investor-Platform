@@ -28,12 +28,18 @@ if not os.getenv("SECRET_KEY"):
     os.environ["SECRET_KEY"] = "your-super-secret-key-here-make-it-long-and-random-123456789"
 
 # CORS middleware
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+if allowed_origins == ["*"]:
+    allow_credentials = False
+else:
+    allow_credentials = True
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins
-    allow_credentials=False,  # Set to False when using "*"
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
+    allow_origins=allowed_origins,
+    allow_credentials=allow_credentials,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Mount static files from project root
