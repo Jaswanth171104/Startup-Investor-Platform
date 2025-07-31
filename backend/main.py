@@ -21,7 +21,6 @@ app = FastAPI(title="Startup Investor Platform API", version="1.0.0")
 
 # Environment variables
 import os
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./startup_investor.db")
 
 # CORS middleware
 app.add_middleware(
@@ -50,4 +49,8 @@ def read_root():
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthy", "message": "API is running"}
+
+@app.get("/test")
+def test_endpoint():
+    return {"message": "Test endpoint working"}
