@@ -21,6 +21,11 @@ app = FastAPI(title="Startup Investor Platform API", version="1.0.0")
 
 # Environment variables
 import os
+import secrets
+
+# Set a default SECRET_KEY if not provided
+if not os.getenv("SECRET_KEY"):
+    os.environ["SECRET_KEY"] = "your-super-secret-key-here-make-it-long-and-random-123456789"
 
 # CORS middleware
 app.add_middleware(
@@ -54,3 +59,12 @@ def health_check():
 @app.get("/test")
 def test_endpoint():
     return {"message": "Test endpoint working"}
+
+@app.get("/debug")
+def debug_info():
+    import os
+    return {
+        "database_url": os.getenv("DATABASE_URL", "Not set"),
+        "secret_key": "Set" if os.getenv("SECRET_KEY") else "Not set",
+        "environment": os.getenv("ENVIRONMENT", "development")
+    }
