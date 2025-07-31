@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Send, Clock, CheckCircle, XCircle, Settings, Eye, Heart, MessageCircle, TrendingUp, Users, DollarSign, MapPin, Globe, Calendar } from 'lucide-react';
+import { Search, Filter, Send, Clock, CheckCircle, XCircle, Settings, Eye, Heart, TrendingUp, Users, DollarSign, MapPin } from 'lucide-react';
 import { getAuthHeaders, getUserId, viewPitchDeck } from '../utils/auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -38,15 +38,7 @@ interface Startup {
   product_demo_video_link?: string;
 }
 
-interface Application {
-  id: number;
-  startup_id: number;
-  investor_id: number;
-  status: string;
-  message: string;
-  created_at: string;
-  startup?: Startup;
-}
+
 
 interface ApplicationLog {
   id: number;
@@ -66,11 +58,7 @@ interface InterestStatus {
   startup_name?: string;
 }
 
-const SIDEBAR_BG = '#fff';
-const SIDEBAR_ACTIVE = '#FFD600';
-const SIDEBAR_TEXT = '#222';
-const MAIN_BG = '#f7f7f7';
-const HIGHLIGHT = '#FFD600';
+
 
 const tabs = [
   { key: 'startups', label: 'Browse Startups' },
@@ -78,17 +66,7 @@ const tabs = [
   { key: 'logs', label: 'Pitch Deck Logs' },
 ];
 
-// Tag color helpers for startups
-const startupTagColors = {
-  industry: 'bg-blue-100 text-blue-800 border border-blue-300',
-  amount: 'bg-green-100 text-green-800 border border-green-300',
-  funding: 'bg-yellow-100 text-yellow-800 border border-yellow-300',
-  fundingStage: 'bg-purple-100 text-purple-800 border border-purple-300',
-};
 
-const allPossibleFundingStages = [
-  'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Series C', 'Growth', 'IPO', 'Other'
-];
 
 const InvestorDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('startups');

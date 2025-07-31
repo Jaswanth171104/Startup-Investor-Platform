@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Target, Users, TrendingUp, Shield, Star, CheckCircle, Play, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, Target, Users, TrendingUp, Shield, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const HomePage: React.FC = () => {
