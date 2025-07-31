@@ -2,10 +2,10 @@
 nixPkgs = ["python311", "python311Packages.pip", "python311Packages.virtualenv"]
 
 [phases.install]
-cmds = ["python -m venv venv", "source venv/bin/activate && pip install -r requirements.txt"]
+cmds = ["cd backend", "python -m venv venv", "source venv/bin/activate && pip install -r requirements.txt"]
 
 [phases.build]
-cmds = ["source venv/bin/activate && python init_db.py"]
+cmds = ["cd backend", "source venv/bin/activate && python init_db.py"]
 
 [start]
-cmd = "source venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port $PORT" 
+cmd = "cd backend && source venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port $PORT" 

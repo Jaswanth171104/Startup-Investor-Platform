@@ -1,1 +1,1 @@
-web: chmod +x build.sh && ./build.sh 
+web: uvicorn main:app --host 0.0.0.0 --port $PORT 

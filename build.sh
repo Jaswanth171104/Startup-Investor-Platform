@@ -1,6 +1,16 @@
 #!/bin/bash
 set -e
 
+# Check if we're in the backend directory, if not, change to it
+if [ ! -f "requirements.txt" ]; then
+    if [ -d "backend" ]; then
+        cd backend
+    else
+        echo "Error: requirements.txt not found and backend directory not found"
+        exit 1
+    fi
+fi
+
 # Create virtual environment
 python3 -m venv venv
 
