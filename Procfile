@@ -1,1 +1,1 @@
-web: uvicorn main:app --host 0.0.0.0 --port $PORT 
+web: chmod +x railway-build.sh && ./railway-build.sh 
