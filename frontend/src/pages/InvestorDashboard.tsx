@@ -88,14 +88,10 @@ const InvestorDashboard: React.FC = () => {
   const [viewingStartupProfile, setViewingStartupProfile] = useState<Startup | null>(null);
   const [updatingInterest, setUpdatingInterest] = useState<number | null>(null);
 
-  const [loadingStartups, setLoadingStartups] = useState(true);
-  const [errorStartups, setErrorStartups] = useState('');
   const [logs, setLogs] = useState<ApplicationLog[]>([]);
   const [loadingLogs, setLoadingLogs] = useState(true);
   const [errorLogs, setErrorLogs] = useState('');
   const [interestStatuses, setInterestStatuses] = useState<InterestStatus[]>([]);
-  const [loadingInterest, setLoadingInterest] = useState(true);
-  const [errorInterest, setErrorInterest] = useState('');
   const [pitchDeckUrl, setPitchDeckUrl] = useState<string | null>(null);
   const [showPitchDeckModal, setShowPitchDeckModal] = useState(false);
   const [pitchDeckFileName, setPitchDeckFileName] = useState<string | null>(null);
@@ -105,15 +101,12 @@ const InvestorDashboard: React.FC = () => {
     console.log('🚀 InvestorDashboard mounted');
     fetchStartups();
     fetchLogs(); // Fetch received pitch decks on mount
-    fetchInterestStatuses();
   }, []); // Empty dependency array - only run once on mount
 
 
 
   const fetchStartups = async () => {
     setLoading(true); // Use the main loading state
-    setLoadingStartups(true);
-    setErrorStartups('');
     try {
       console.log('🔍 Fetching startups...');
       const response = await fetch(`${API_BASE_URL}/startup-profile/all`, {
@@ -129,16 +122,13 @@ const InvestorDashboard: React.FC = () => {
       } else {
         const errorText = await response.text();
         console.error('❌ Failed to fetch startups:', response.status, errorText);
-        setErrorStartups('Failed to fetch startups');
         setError('Failed to fetch startups');
       }
     } catch (err) {
       console.error('❌ Network error:', err);
-      setErrorStartups('Network error. Please check your connection.');
       setError('Network error. Please check your connection.');
     } finally {
       setLoading(false); // Use the main loading state
-      setLoadingStartups(false);
     }
   };
 
@@ -166,27 +156,7 @@ const InvestorDashboard: React.FC = () => {
     }
   };
 
-  const fetchInterestStatuses = async () => {
-    setLoadingInterest(true);
-    setErrorInterest('');
-    try {
-      const userId = getUserId();
-      const response = await fetch(`${API_BASE_URL}/applications/interest-status/investor/${userId}`, {
-        headers: getAuthHeaders(),
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setInterestStatuses(data);
-      } else {
-        setErrorInterest('Unable to fetch interest statuses');
-      }
-    } catch (err) {
-      setErrorInterest('Unable to fetch interest statuses');
-    } finally {
-      setLoadingInterest(false);
-    }
-  };
+
 
   const handleInterestStatus = async (startupId: number, status: 'interested' | 'not_interested') => {
     setUpdatingInterest(startupId);
@@ -207,7 +177,7 @@ const InvestorDashboard: React.FC = () => {
       
       if (response.ok) {
         // Refresh interest statuses
-        await fetchInterestStatuses();
+  
       } else {
         setError('Failed to update interest status');
       }
@@ -235,7 +205,6 @@ const InvestorDashboard: React.FC = () => {
 
     setSendingApplication(true);
     try {
-      const userId = getUserId();
       const response = await fetch(`${API_BASE_URL}/applications/update-interest`, {
         method: 'POST',
         headers: {
@@ -251,7 +220,7 @@ const InvestorDashboard: React.FC = () => {
       if (response.ok) {
         setApplicationMessage('');
         setSelectedStartup(null);
-        fetchInterestStatuses(); // Refresh interest statuses
+
         alert('Interest expressed successfully!');
       } else {
         const errorData = await response.json().catch(() => ({}));
@@ -278,18 +247,7 @@ const InvestorDashboard: React.FC = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'accepted':
-        return 'text-green-600 bg-green-100';
-      case 'rejected':
-        return 'text-red-600 bg-red-100';
-      case 'pending':
-        return 'text-yellow-600 bg-yellow-100';
-      default:
-        return 'text-gray-600 bg-gray-100';
-    }
-  };
+
 
   const filteredStartups = startups.filter(startup => {
     console.log('🔍 Filtering startup:', startup.company_name);

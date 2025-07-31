@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Send, Clock, CheckCircle, XCircle, Eye, EyeOff, User, FileText, Settings } from 'lucide-react';
+import { Search, Filter, Send, Clock, CheckCircle, XCircle, User, FileText, Settings } from 'lucide-react';
 import { getAuthHeaders, getUserId, viewPitchDeck } from '../utils/auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -44,11 +44,7 @@ interface InterestStatus {
   investor_name?: string;
 }
 
-const SIDEBAR_BG = '#fff';
-const SIDEBAR_ACTIVE = '#FFD600';
-const SIDEBAR_TEXT = '#222';
-const MAIN_BG = '#f7f7f7';
-const HIGHLIGHT = '#FFD600';
+
 
 const tabs = [
   { key: 'investors', label: 'Browse Investors' },
@@ -67,14 +63,7 @@ const tagColors = {
 type InvestorArrayKeys = 'investment_stages' | 'industry_focus';
 type InvestorStringKeys = 'check_size_range';
 
-const getUniqueArrayValues = (arr: Investor[], key: InvestorArrayKeys) => {
-  const values = arr.flatMap(inv => Array.isArray(inv[key]) ? inv[key] : inv[key] ? [inv[key] as string] : []);
-  return Array.from(new Set(values)).filter(Boolean);
-};
-const getUniqueStringValues = (arr: Investor[], key: InvestorStringKeys) => {
-  const values = arr.map(inv => inv[key]).filter(Boolean);
-  return Array.from(new Set(values));
-};
+
 
 // Helper to get all unique options for a given key from the full investors array
 function getAllUniqueOptions(arr: Investor[], key: 'investment_stages' | 'industry_focus' | 'check_size_range'): string[] {
@@ -114,8 +103,7 @@ const StartupDashboard: React.FC = () => {
   const [loadingLogs, setLoadingLogs] = useState(true);
   const [errorLogs, setErrorLogs] = useState('');
   const [interestStatuses, setInterestStatuses] = useState<InterestStatus[]>([]);
-  const [loadingInterest, setLoadingInterest] = useState(true);
-  const [errorInterest, setErrorInterest] = useState('');
+
   const [pitchDeckUrl, setPitchDeckUrl] = useState<string | null>(null);
   const [showPitchDeckModal, setShowPitchDeckModal] = useState(false);
   const [pitchDeckFileName, setPitchDeckFileName] = useState<string | null>(null);
@@ -128,7 +116,6 @@ const StartupDashboard: React.FC = () => {
     fetchInvestors();
     fetchApplications();
     fetchLogs(); // Fetch sent pitch decks on mount
-    fetchInterestStatuses();
     fetchCurrentPitchDeck(); // Fetch current pitch deck
   }, []); // Empty dependency array - only run once on mount
 
@@ -274,68 +261,9 @@ const StartupDashboard: React.FC = () => {
     }
   };
 
-  const fetchInterestStatuses = async () => {
-    setLoadingInterest(true);
-    setErrorInterest('');
-    try {
-      const userId = getUserId();
-      const response = await fetch(`${API_BASE_URL}/applications/interest-status/startup/${userId}`, {
-        headers: getAuthHeaders(),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setInterestStatuses(data);
-      } else {
-        throw new Error(`Failed to fetch interest statuses (${response.status})`);
-      }
-    } catch (err) {
-      console.error('Fetch interest statuses error:', err);
-      setErrorInterest('Network error. Please check your connection.');
-    } finally {
-      setLoadingInterest(false);
-    }
-  };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'accepted':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'rejected':
-        return <XCircle className="w-5 h-5 text-red-500" />;
-      case 'pending':
-        return <Clock className="w-5 h-5 text-yellow-500" />;
-      default:
-        return <Clock className="w-5 h-5 text-gray-500" />;
-    }
-  };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'accepted':
-        return 'text-green-600 bg-green-100';
-      case 'rejected':
-        return 'text-red-600 bg-red-100';
-      case 'pending':
-        return 'text-yellow-600 bg-yellow-100';
-      default:
-        return 'text-gray-600 bg-gray-100';
-    }
-  };
 
-  // Normalize investors so all array fields are always arrays
-  const normalizedInvestors = investors.map(inv => ({
-    ...inv,
-    investment_stages: Array.isArray(inv.investment_stages)
-      ? inv.investment_stages
-      : inv.investment_stages
-        ? [inv.investment_stages]
-        : [],
-    industry_focus: Array.isArray(inv.industry_focus)
-      ? inv.industry_focus
-      : inv.industry_focus
-        ? [inv.industry_focus]
-        : [],
-  }));
 
   // These should be outside the component or at the top, but always use the full investors array
   const uniqueStages = getAllUniqueOptions(investors, 'investment_stages');
@@ -372,10 +300,7 @@ const StartupDashboard: React.FC = () => {
     return applications.some(app => app.investor_id === investorId);
   };
 
-  const getApplicationStatus = (investorId: number) => {
-    const application = applications.find(app => app.investor_id === investorId);
-    return application?.status || null;
-  };
+
 
   const getInterestStatus = (investorId: number) => {
     const interestStatus = interestStatuses.find(status => status.investor_id === investorId);
@@ -459,10 +384,10 @@ const StartupDashboard: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: MAIN_BG }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#f7f7f7' }}>
       {/* Sidebar */}
-      <nav style={{ width: 220, background: SIDEBAR_BG, borderRight: '1px solid #eee', display: 'flex', flexDirection: 'column', padding: 0, height: '100vh' }}>
-        <div style={{ fontWeight: 700, fontSize: 24, color: SIDEBAR_TEXT, padding: '32px 0 24px 0', textAlign: 'center', letterSpacing: 1 }}>Startup Dashboard</div>
+      <nav style={{ width: 220, background: '#fff', borderRight: '1px solid #eee', display: 'flex', flexDirection: 'column', padding: 0, height: '100vh' }}>
+        <div style={{ fontWeight: 700, fontSize: 24, color: '#222', padding: '32px 0 24px 0', textAlign: 'center', letterSpacing: 1 }}>Startup Dashboard</div>
         
         {/* Profile Button */}
         <div style={{ padding: '0 32px 20px 32px' }}>
@@ -470,7 +395,7 @@ const StartupDashboard: React.FC = () => {
             onClick={() => window.location.href = '/startup-profile-edit'}
             style={{
               background: 'transparent',
-              color: SIDEBAR_TEXT,
+              color: '#222',
               border: '2px solid #FFD600',
               outline: 'none',
               fontWeight: 600,
@@ -492,7 +417,7 @@ const StartupDashboard: React.FC = () => {
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.color = SIDEBAR_TEXT;
+              e.currentTarget.style.color = '#222';
             }}
           >
             <Settings className="w-4 h-4" />
@@ -506,8 +431,8 @@ const StartupDashboard: React.FC = () => {
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               style={{
-                background: activeTab === tab.key ? SIDEBAR_ACTIVE : 'transparent',
-                color: activeTab === tab.key ? '#222' : SIDEBAR_TEXT,
+                background: activeTab === tab.key ? '#FFD600' : 'transparent',
+                color: activeTab === tab.key ? '#222' : '#222',
                 border: 'none',
                 outline: 'none',
                 fontWeight: 600,
@@ -527,7 +452,7 @@ const StartupDashboard: React.FC = () => {
       </nav>
 
       {/* Main Content */}
-      <main style={{ flex: 1, padding: 0, background: MAIN_BG, minHeight: '100vh' }}>
+      <main style={{ flex: 1, padding: 0, background: '#f7f7f7', minHeight: '100vh' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 32px' }}>
           
           {/* Investors Tab */}

@@ -219,46 +219,7 @@ const StartupProfileCreate: React.FC = () => {
     }));
   };
 
-  const handlePitchDeckUpload = async () => {
-    if (!pitchDeckFile) {
-      setError('Please select a pitch deck file');
-      return;
-    }
 
-    setLoading(true); // Use loading state for pitch deck upload
-    setError('');
-
-    try {
-      const formData = new FormData();
-      formData.append('pitch_deck', pitchDeckFile);
-
-      const response = await fetch(`${API_BASE_URL}/startup-profile/upload-pitch-deck`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        navigate('/startup-dashboard');
-      } else {
-        const data = await response.json();
-        setError(data.detail || 'Failed to upload pitch deck');
-      }
-    } catch (err) {
-      setError('Network error. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPitchDeckFile(file);
-    }
-  };
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);

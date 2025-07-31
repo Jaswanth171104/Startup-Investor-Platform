@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuthHeaders, getUserId } from '../utils/auth';
-import { Edit, Save, X, User, Building, DollarSign, MapPin, Briefcase } from 'lucide-react';
+import { Edit, Save, X, User, DollarSign, MapPin, Briefcase } from 'lucide-react';
 
 interface InvestorProfile {
   id: number;
@@ -39,6 +39,8 @@ interface InvestorProfile {
   updated_at: string;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 const InvestorProfileEdit: React.FC = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<InvestorProfile | null>(null);
@@ -55,8 +57,7 @@ const InvestorProfileEdit: React.FC = () => {
   const fetchProfile = async () => {
     try {
       const userId = getUserId();
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-    const response = await fetch(`${API_BASE_URL}/investor-profile/user/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/investor-profile/user/${userId}`, {
         headers: getAuthHeaders(),
       });
 

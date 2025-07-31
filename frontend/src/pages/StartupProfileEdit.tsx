@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuthHeaders, getUserId } from '../utils/auth';
-import { Edit, Save, X, User, Building, DollarSign, Users, FileText } from 'lucide-react';
+import { Edit, Save, X, Building, DollarSign, FileText } from 'lucide-react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -86,17 +86,15 @@ const StartupProfileEdit: React.FC = () => {
     setError('');
 
     try {
-      const userId = getUserId();
-      
       // Prepare data for submission - convert empty strings to null for date fields
       const submitData = { ...editedProfile };
       
-      // Convert empty strings to null for date fields
+      // Convert empty strings to undefined for date fields
       if (submitData.last_round_date === '') {
-        submitData.last_round_date = null;
+        submitData.last_round_date = undefined;
       }
       if (submitData.founding_date === '') {
-        submitData.founding_date = null;
+        submitData.founding_date = undefined;
       }
       
       const response = await fetch(`${API_BASE_URL}/startup-profile/${profile?.user_id}`, {

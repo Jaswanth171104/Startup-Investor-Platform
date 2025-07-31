@@ -4,7 +4,6 @@ import { getAuthHeaders } from '../utils/auth';
 
 const InvestorProfileCreate: React.FC = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
