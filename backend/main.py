@@ -30,21 +30,10 @@ if not os.getenv("SECRET_KEY"):
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173", 
-        "http://localhost:3000", 
-        "http://127.0.0.1:5173", 
-        "http://127.0.0.1:3000",
-        "https://startup-investor-platform.vercel.app",
-        "https://startup-investor-platform.netlify.app",
-        "https://*.vercel.app",
-        "https://*.netlify.app",
-        "*"  # Allow all origins for now
-    ],
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allow_headers=["*"],
-    expose_headers=["*"],
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=False,  # Set to False when using "*"
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
 )
 
 # Mount static files from project root
@@ -79,7 +68,4 @@ def debug_info():
         "environment": os.getenv("ENVIRONMENT", "development")
     }
 
-@app.options("/{full_path:path}")
-async def options_handler(full_path: str):
-    """Handle CORS preflight requests"""
-    return {"message": "OK"}
+

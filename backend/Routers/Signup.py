@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from Database.db import get_db
 from Models.Auth_models import User, OTP
@@ -10,11 +10,7 @@ from datetime import datetime, timedelta
 router = APIRouter()
 
 @router.post("/send-otp", response_model=OTPResponse)
-def send_otp(request: OTPRequest, response: Response, db: Session = Depends(get_db)):
-    # Add CORS headers
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "*"
+def send_otp(request: OTPRequest, db: Session = Depends(get_db)):
     """Send OTP to user's email"""
     try:
         # Check if user already exists
@@ -79,11 +75,7 @@ def send_otp(request: OTPRequest, response: Response, db: Session = Depends(get_
         )
 
 @router.post("/verify-otp-and-signup", response_model=LoginResponse)
-def verify_otp_and_signup(request: OTPVerifyAndSignup, response: Response, db: Session = Depends(get_db)):
-    # Add CORS headers
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "*"
+def verify_otp_and_signup(request: OTPVerifyAndSignup, db: Session = Depends(get_db)):
     
     try:
         # Verify OTP
@@ -149,11 +141,7 @@ def verify_otp_and_signup(request: OTPVerifyAndSignup, response: Response, db: S
         )
 
 @router.post("/login", response_model=LoginResponse)
-def login(request: UserLogin, response: Response, db: Session = Depends(get_db)):
-    # Add CORS headers
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "*"
+def login(request: UserLogin, db: Session = Depends(get_db)):
     """Login user and return JWT token"""
     try:
         # Find user
@@ -192,13 +180,7 @@ def login(request: UserLogin, response: Response, db: Session = Depends(get_db))
             detail=f"An error occurred: {str(e)}"
         )
 
-@router.options("/{full_path:path}")
-async def auth_options_handler(full_path: str, response: Response):
-    """Handle CORS preflight requests for auth routes"""
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-    return {"message": "OK"}
+
 
 @router.get("/me", response_model=UserResponse)
 def get_current_user_info(current_user: User = Depends(get_current_user)):
