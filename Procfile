@@ -1,1 +1,0 @@
-web: chmod +x railway-build.sh && ./railway-build.sh 
