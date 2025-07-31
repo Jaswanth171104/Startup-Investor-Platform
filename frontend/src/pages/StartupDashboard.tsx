@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Send, Clock, CheckCircle, XCircle, User, FileText, Settings } from 'lucide-react';
+import { Search, Filter, Send, XCircle, User, FileText, Settings } from 'lucide-react';
 import { getAuthHeaders, getUserId, viewPitchDeck } from '../utils/auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
@@ -60,8 +60,7 @@ const tagColors = {
   background: 'bg-purple-100 text-purple-800',
 };
 
-type InvestorArrayKeys = 'investment_stages' | 'industry_focus';
-type InvestorStringKeys = 'check_size_range';
+
 
 
 

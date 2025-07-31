@@ -90,8 +90,9 @@ const InvestorDashboard: React.FC = () => {
 
   const [logs, setLogs] = useState<ApplicationLog[]>([]);
   const [loadingLogs, setLoadingLogs] = useState(true);
-  const [errorLogs, setErrorLogs] = useState('');
+    const [errorLogs, setErrorLogs] = useState('');
   const [interestStatuses, setInterestStatuses] = useState<InterestStatus[]>([]);
+  
   const [pitchDeckUrl, setPitchDeckUrl] = useState<string | null>(null);
   const [showPitchDeckModal, setShowPitchDeckModal] = useState(false);
   const [pitchDeckFileName, setPitchDeckFileName] = useState<string | null>(null);
