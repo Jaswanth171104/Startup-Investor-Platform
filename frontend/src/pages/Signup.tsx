@@ -23,7 +23,8 @@ const Signup: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/auth/send-otp', {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/auth/send-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,8 +59,10 @@ const Signup: React.FC = () => {
     setLoading(true);
     setError('');
 
+    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
     try {
-      const response = await fetch('http://localhost:8000/auth/verify-otp-and-signup', {
+      const response = await fetch(`${API_BASE_URL}/auth/verify-otp-and-signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

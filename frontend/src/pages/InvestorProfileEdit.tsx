@@ -55,7 +55,8 @@ const InvestorProfileEdit: React.FC = () => {
   const fetchProfile = async () => {
     try {
       const userId = getUserId();
-      const response = await fetch(`http://localhost:8000/investor-profile/user/${userId}`, {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const response = await fetch(`${API_BASE_URL}/investor-profile/user/${userId}`, {
         headers: getAuthHeaders(),
       });
 
@@ -95,7 +96,7 @@ const InvestorProfileEdit: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch(`http://localhost:8000/investor-profile/${profile?.user_id}`, {
+      const response = await fetch(`${API_BASE_URL}/investor-profile/${profile?.user_id}`, {
         method: 'PUT',
         headers: {
           ...getAuthHeaders(),
@@ -183,7 +184,7 @@ const InvestorProfileEdit: React.FC = () => {
               {profile.profile_photo_filename ? (
                 <>
                   <img
-                    src={`http://localhost:8000/uploads/profile_photos/${profile.profile_photo_filename}`}
+                    src={`${API_BASE_URL}/uploads/profile_photos/${profile.profile_photo_filename}`}
                     alt={profile.full_name}
                     className="w-16 h-16 rounded-full object-cover border-2 border-yellow-500"
                     onError={e => { 

@@ -46,7 +46,8 @@ const InvestorProfileCreate: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/investor-profile/', {
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/investor-profile/`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(formData),
