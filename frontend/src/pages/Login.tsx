@@ -40,11 +40,47 @@ const Login: React.FC = () => {
         setUserId(data.user_id);
         setUserRole(data.role);
 
-        // Navigate based on role
-        if (data.role === 'startup') {
-          navigate('/startup-dashboard');
-        } else {
-          navigate('/investor-dashboard');
+        // Check if user has completed profile
+        try {
+          const profileResponse = await fetch(`${API_BASE_URL}/auth/me`, {
+            headers: {
+              'Authorization': `Bearer ${data.access_token}`
+            }
+          });
+          
+          if (profileResponse.ok) {
+            const userData = await profileResponse.json();
+            
+            // If user hasn't completed profile, redirect to profile creation
+            if (!userData.profile_completed) {
+              if (data.role === 'startup') {
+                navigate('/startup-profile/create');
+              } else {
+                navigate('/investor-profile/create');
+              }
+            } else {
+              // If profile is completed, go to dashboard
+              if (data.role === 'startup') {
+                navigate('/startup-dashboard');
+              } else {
+                navigate('/investor-dashboard');
+              }
+            }
+          } else {
+            // If can't get user data, redirect to profile creation
+            if (data.role === 'startup') {
+              navigate('/startup-profile/create');
+            } else {
+              navigate('/investor-profile/create');
+            }
+          }
+        } catch (err) {
+          // If error, redirect to profile creation
+          if (data.role === 'startup') {
+            navigate('/startup-profile/create');
+          } else {
+            navigate('/investor-profile/create');
+          }
         }
       } else {
         const data = await response.json();

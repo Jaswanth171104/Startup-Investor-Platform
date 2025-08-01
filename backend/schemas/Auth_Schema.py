@@ -28,6 +28,7 @@ class UserLogin(BaseModel):
 
 class UserResponse(UserBase):
     id: int
+    profile_completed: bool
     created_at: datetime
     
     class Config:
