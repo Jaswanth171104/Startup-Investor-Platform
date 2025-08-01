@@ -74,4 +74,49 @@ def debug_info():
         "environment": os.getenv("ENVIRONMENT", "development")
     }
 
+@app.get("/db-check")
+def check_database():
+    """Check database tables and status"""
+    try:
+        from sqlalchemy import text
+        from Database.db import engine
+        
+        with engine.connect() as conn:
+            # Get all tables
+            result = conn.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name"))
+            tables = [row[0] for row in result]
+            
+            # Check if users table exists and count users
+            user_count = 0
+            if 'users' in tables:
+                result = conn.execute(text("SELECT COUNT(*) FROM users"))
+                user_count = result.fetchone()[0]
+            
+            # Check startup profiles
+            startup_count = 0
+            if 'startup_profiles' in tables:
+                result = conn.execute(text("SELECT COUNT(*) FROM startup_profiles"))
+                startup_count = result.fetchone()[0]
+            
+            return {
+                "status": "connected",
+                "tables": tables,
+                "table_count": len(tables),
+                "users_count": user_count,
+                "startup_profiles_count": startup_count,
+                "users_table_exists": 'users' in tables,
+                "startup_profiles_table_exists": 'startup_profiles' in tables
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "tables": [],
+            "table_count": 0,
+            "users_count": 0,
+            "startup_profiles_count": 0,
+            "users_table_exists": False,
+            "startup_profiles_table_exists": False
+        }
+
 
